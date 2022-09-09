@@ -218,8 +218,9 @@ func (c *Composer) Start() error {
 
 	if c.localWorkerListener != nil {
 		localWorkerAPI = &http.Server{
-			ErrorLog: c.logger,
-			Handler:  c.workers.Handler(),
+			ErrorLog:          c.logger,
+			Handler:           c.workers.Handler(),
+			ReadHeaderTimeout: 5 * time.Second,
 		}
 
 		go func() {
@@ -249,8 +250,9 @@ func (c *Composer) Start() error {
 			}
 		}
 		remoteWorkerAPI = &http.Server{
-			ErrorLog: c.logger,
-			Handler:  handler,
+			ErrorLog:          c.logger,
+			Handler:           handler,
+			ReadHeaderTimeout: 5 * time.Second,
 		}
 
 		go func() {
@@ -294,8 +296,9 @@ func (c *Composer) Start() error {
 		}
 
 		composerAPI = &http.Server{
-			ErrorLog: c.logger,
-			Handler:  handler,
+			ErrorLog:          c.logger,
+			Handler:           handler,
+			ReadHeaderTimeout: 5 * time.Second,
 		}
 
 		go func() {
