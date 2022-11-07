@@ -1084,6 +1084,17 @@
             }
           },
           {
+            "type": "org.osbuild.systemd-journald",
+            "options": {
+              "filename": "10-persistent.conf",
+              "config": {
+                "Journal": {
+                  "Storage": "persistent"
+                }
+              }
+            }
+          },
+          {
             "type": "org.osbuild.ostree.selinux",
             "options": {
               "deployment": {

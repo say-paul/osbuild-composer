@@ -33,6 +33,7 @@
       }
     }
   },
+  "no-image-info": true,
   "manifest": {
     "version": "2",
     "pipelines": [
@@ -2528,6 +2529,17 @@
               },
               "greenboot": true,
               "write_cmdline": false
+            }
+          },
+          {
+            "type": "org.osbuild.systemd-journald",
+            "options": {
+              "filename": "10-persistent.conf",
+              "config": {
+                "Journal": {
+                  "Storage": "persistent"
+                }
+              }
             }
           },
           {
@@ -15495,6 +15507,5 @@
         "check_gpg": true
       }
     ]
-  },
-  "no-image-info": true
+  }
 }
