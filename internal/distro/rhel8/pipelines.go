@@ -999,6 +999,17 @@ func ostreeDeployPipeline(
 
 	p.AddStage(bootloaderConfigStage(t, *pt, kernel, kernelVer, true, true))
 
+	p.AddStage(osbuild.NewSystemdJournaldStage(
+		&osbuild.SystemdJournaldStageOptions{
+			Filename: "10-persistent.conf",
+			Config: osbuild.SystemdJournaldConfigDropin{
+				Journal: osbuild.SystemdJournaldConfigJournalSection{
+					Storage: osbuild.StoragePresistent,
+				},
+			},
+		},
+	))
+
 	p.AddStage(osbuild.NewOSTreeSelinuxStage(
 		&osbuild.OSTreeSelinuxStageOptions{
 			Deployment: osbuild.OSTreeDeployment{
@@ -1007,6 +1018,7 @@ func ostreeDeployPipeline(
 			},
 		},
 	))
+
 	return p
 }
 
