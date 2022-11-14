@@ -405,6 +405,17 @@ func osPipeline(t *imageType,
 
 			containerStoreOpts := osbuild.NewContainerStorageOptions(storageConf, storagePath)
 			p.AddStage(osbuild.NewContainersStorageConfStage(containerStoreOpts))
+
+			p.AddStage(osbuild.NewSystemdJournaldStage(
+				&osbuild.SystemdJournaldStageOptions{
+					Filename: "10-persistent.conf",
+					Config: osbuild.SystemdJournaldConfigDropin{
+						Journal: osbuild.SystemdJournaldConfigJournalSection{
+							Storage: osbuild.StoragePresistent,
+						},
+					},
+				},
+			))
 		}
 
 		skopeo := osbuild.NewSkopeoStage(images, storagePath)
@@ -994,19 +1005,6 @@ func ostreeDeployPipeline(
 	}
 
 	p.AddStage(bootloaderConfigStage(t, *pt, "", true, true))
-
-	journald_stage := osbuild.NewSystemdJournaldStage(
-		&osbuild.SystemdJournaldStageOptions{
-			Filename: "10-persistent.conf",
-			Config: osbuild.SystemdJournaldConfigDropin{
-				Journal: osbuild.SystemdJournaldConfigJournalSection{
-					Storage: osbuild.StoragePresistent,
-				},
-			},
-		},
-	)
-	journald_stage.MountOSTree(osname, options.OSTree.ImageRef, 0)
-	p.AddStage(journald_stage)
 
 	p.AddStage(osbuild.NewOSTreeSelinuxStage(
 		&osbuild.OSTreeSelinuxStageOptions{
