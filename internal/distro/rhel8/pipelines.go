@@ -410,17 +410,6 @@ func osPipeline(t *imageType,
 
 			containerStoreOpts := osbuild.NewContainerStorageOptions(storageConf, storagePath)
 			p.AddStage(osbuild.NewContainersStorageConfStage(containerStoreOpts))
-
-			p.AddStage(osbuild.NewSystemdJournaldStage(
-				&osbuild.SystemdJournaldStageOptions{
-					Filename: "10-persistent.conf",
-					Config: osbuild.SystemdJournaldConfigDropin{
-						Journal: osbuild.SystemdJournaldConfigJournalSection{
-							Storage: osbuild.StoragePresistent,
-						},
-					},
-				},
-			))
 		}
 
 		skopeo := osbuild.NewSkopeoStage(images, storagePath)
@@ -683,6 +672,16 @@ func osPipeline(t *imageType,
 				"wheel", "docker",
 			},
 		}))
+		p.AddStage(osbuild.NewSystemdJournaldStage(
+			&osbuild.SystemdJournaldStageOptions{
+				Filename: "10-persistent.conf",
+				Config: osbuild.SystemdJournaldConfigDropin{
+					Journal: osbuild.SystemdJournaldConfigJournalSection{
+						Storage: osbuild.StoragePresistent,
+					},
+				},
+			},
+		))
 	}
 
 	return p, nil
