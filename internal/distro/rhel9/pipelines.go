@@ -667,12 +667,6 @@ func osPipeline(t *imageType,
 	}
 
 	if t.rpmOstree {
-		p.AddStage(osbuild.NewOSTreePrepTreeStage(&osbuild.OSTreePrepTreeStageOptions{
-			EtcGroupMembers: []string{
-				// NOTE: We may want to make this configurable.
-				"wheel", "docker",
-			},
-		}))
 		p.AddStage(osbuild.NewSystemdJournaldStage(
 			&osbuild.SystemdJournaldStageOptions{
 				Filename: "10-persistent.conf",
@@ -683,6 +677,12 @@ func osPipeline(t *imageType,
 				},
 			},
 		))
+		p.AddStage(osbuild.NewOSTreePrepTreeStage(&osbuild.OSTreePrepTreeStageOptions{
+			EtcGroupMembers: []string{
+				// NOTE: We may want to make this configurable.
+				"wheel", "docker",
+			},
+		}))
 	}
 
 	return p, nil

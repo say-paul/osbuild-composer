@@ -5207,6 +5207,20 @@
             }
           },
           {
+<<<<<<< HEAD
+=======
+            "type": "org.osbuild.systemd-journald",
+            "options": {
+              "filename": "10-persistent.conf",
+              "config": {
+                "Journal": {
+                  "Storage": "persistent"
+                }
+              }
+            }
+          },
+          {
+>>>>>>> 52515087 (fix: change journald stage order)
             "type": "org.osbuild.ostree.preptree",
             "options": {
               "etc_group_members": [
