@@ -355,8 +355,10 @@ func (t *imageType) checkOptions(bp *blueprint.Blueprint, options distro.ImageOp
 		if options.OSTree == nil || options.OSTree.URL == "" {
 			return warnings, fmt.Errorf("%q images require specifying a URL from which to retrieve the OSTree commit", t.name)
 		}
-
 		allowed := []string{"Ignition", "Kernel", "User", "Group"}
+		if t.name == "edge-raw-image" {
+			allowed = append(allowed, "Directories")
+		}
 		if err := customizations.CheckAllowed(allowed...); err != nil {
 			return warnings, fmt.Errorf("unsupported blueprint customizations found for image type %q: (allowed: %s)", t.name, strings.Join(allowed, ", "))
 		}
@@ -416,9 +418,12 @@ func (t *imageType) checkOptions(bp *blueprint.Blueprint, options distro.ImageOp
 	if err != nil {
 		return warnings, err
 	}
-	err = blueprint.CheckDirectoryCustomizationsPolicy(dc, pathpolicy.CustomDirectoriesPolicies)
-	if err != nil {
-		return warnings, err
+
+	if t.name != "edge-raw-image" {
+		err = blueprint.CheckDirectoryCustomizationsPolicy(dc, pathpolicy.CustomDirectoriesPolicies)
+		if err != nil {
+			return warnings, err
+		}
 	}
 
 	err = blueprint.CheckFileCustomizationsPolicy(fc, pathpolicy.CustomFilesPolicies)
